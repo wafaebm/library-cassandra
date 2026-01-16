@@ -1,0 +1,619 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Library Front</title>
+  <style>
+    :root{
+      --bg1:#0b1020;
+      --bg2:#0f1b3d;
+      --card: rgba(255,255,255,0.08);
+      --card2: rgba(255,255,255,0.12);
+      --border: rgba(255,255,255,0.14);
+      --text: rgba(255,255,255,0.92);
+      --muted: rgba(255,255,255,0.68);
+      --ok: #34d399;
+      --err:#fb7185;
+      --warn:#fbbf24;
+      --accent:#60a5fa;
+      --accent2:#a78bfa;
+      --shadow: 0 12px 40px rgba(0,0,0,0.35);
+      --radius: 16px;
+      --radius2: 22px;
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      color: var(--text);
+      background:
+        radial-gradient(1200px 600px at 10% 10%, rgba(96,165,250,0.22), transparent 60%),
+        radial-gradient(900px 500px at 90% 20%, rgba(167,139,250,0.18), transparent 55%),
+        radial-gradient(800px 500px at 60% 90%, rgba(52,211,153,0.10), transparent 55%),
+        linear-gradient(180deg, var(--bg1), var(--bg2));
+      padding: 28px;
+    }
+
+    .container{
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    .topbar{
+      display:flex;
+      gap:16px;
+      align-items:flex-start;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+
+    .title{
+      display:flex;
+      gap:14px;
+      align-items:center;
+    }
+
+    .logo{
+      width:46px; height:46px;
+      display:grid; place-items:center;
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(96,165,250,0.35), rgba(167,139,250,0.25));
+      border:1px solid var(--border);
+      box-shadow: var(--shadow);
+      user-select:none;
+    }
+
+    h1{
+      margin:0;
+      font-size: 22px;
+      letter-spacing: 0.2px;
+    }
+    .subtitle{
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    /* Form URL */
+    .urlBar{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      padding: 12px;
+      border-radius: var(--radius2);
+      background: var(--card);
+      border:1px solid var(--border);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      margin-bottom: 18px;
+    }
+    .urlBar .hint{
+      min-width: 90px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    input, select{
+      width:100%;
+      padding: 10px 12px;
+      margin: 6px 0 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(0,0,0,0.22);
+      color: var(--text);
+      outline: none;
+    }
+    input::placeholder{ color: rgba(255,255,255,0.40); }
+
+    .urlBar input{
+      margin:0;
+      border-radius: 14px;
+    }
+
+    .btn{
+      appearance:none;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.10);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 14px;
+      cursor:pointer;
+      font-weight: 600;
+      transition: transform .08s ease, background .15s ease, border-color .15s ease, opacity .15s ease;
+      display:inline-flex;
+      gap:10px;
+      align-items:center;
+      justify-content:center;
+      user-select:none;
+    }
+    .btn:hover{ background: rgba(255,255,255,0.14); border-color: rgba(255,255,255,0.24); }
+    .btn:active{ transform: translateY(1px); }
+    .btn:disabled{ opacity: .55; cursor:not-allowed; }
+
+    .btnPrimary{
+      background: linear-gradient(135deg, rgba(96,165,250,0.35), rgba(167,139,250,0.25));
+      border-color: rgba(255,255,255,0.22);
+    }
+    .btnPrimary:hover{ background: linear-gradient(135deg, rgba(96,165,250,0.42), rgba(167,139,250,0.32)); }
+
+    .btnGhost{
+      background: rgba(0,0,0,0.18);
+    }
+
+    .btnRow{
+      display:flex;
+      gap:10px;
+      flex-wrap: wrap;
+      margin-top: 4px;
+    }
+
+    label{
+      font-size: 12px;
+      color: var(--muted);
+      display:block;
+      margin-top: 4px;
+    }
+
+    /* Grid */
+    .grid{
+      display:grid;
+      gap: 16px;
+      grid-template-columns: repeat(12, 1fr);
+    }
+
+    .card{
+      grid-column: span 4;
+      border: 1px solid var(--border);
+      border-radius: var(--radius2);
+      padding: 16px;
+      background: var(--card);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      overflow:hidden;
+      position: relative;
+    }
+
+    .card::before{
+      content:"";
+      position:absolute;
+      inset: -80px -120px auto auto;
+      width: 220px;
+      height: 220px;
+      background: radial-gradient(circle at 30% 30%, rgba(96,165,250,0.22), transparent 60%);
+      transform: rotate(12deg);
+      pointer-events:none;
+    }
+
+    .card h2{
+      margin: 0 0 10px;
+      font-size: 16px;
+      letter-spacing: 0.2px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    .card p{
+      margin: 0 0 12px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    /* Output */
+    .out{
+      background: rgba(0,0,0,0.22);
+      border: 1px solid rgba(255,255,255,0.16);
+      border-radius: 14px;
+      padding: 12px;
+      margin-top: 10px;
+      overflow:auto;
+      min-height: 82px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New";
+      font-size: 12px;
+      line-height: 1.45;
+      white-space: pre;
+    }
+
+    .loader{
+      width: 14px; height: 14px;
+      border-radius: 999px;
+      border: 2px solid rgba(255,255,255,0.35);
+      border-top-color: rgba(255,255,255,0.90);
+      display:inline-block;
+      animation: spin .7s linear infinite;
+      vertical-align: -2px;
+    }
+    @keyframes spin{ to{ transform: rotate(360deg);} }
+
+    /* Toasts */
+    .toasts{
+      position: fixed;
+      top: 18px;
+      right: 18px;
+      display:flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 50;
+    }
+    .toast{
+      width: min(360px, calc(100vw - 36px));
+      padding: 12px 12px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow);
+      display:flex;
+      align-items:flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      animation: pop .18s ease-out;
+    }
+    @keyframes pop{
+      from{ transform: translateY(-6px); opacity: 0; }
+      to{ transform: translateY(0); opacity: 1; }
+    }
+    .toast strong{ display:block; font-size: 13px; margin-bottom: 2px;}
+    .toast small{ color: var(--muted); font-size: 12px; line-height: 1.25; }
+    .toast .x{
+      border:none;
+      background: transparent;
+      color: rgba(255,255,255,0.7);
+      cursor:pointer;
+      font-size: 16px;
+      line-height: 1;
+      padding: 0 4px;
+    }
+    .toast.ok strong{ color: var(--ok); }
+    .toast.err strong{ color: var(--err); }
+
+    /* Responsive */
+    @media (max-width: 1100px){
+      .card{ grid-column: span 6; }
+    }
+    @media (max-width: 720px){
+      body{ padding: 16px; }
+      .topbar{ flex-direction: column; }
+      .card{ grid-column: span 12; }
+      .urlBar{ flex-direction: column; align-items: stretch; }
+      .urlBar .hint{ min-width: unset; }
+    }
+
+    /* Tiny utility */
+    .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New"; }
+  </style>
+</head>
+<body>
+  <div class="toasts" id="toasts"></div>
+
+  <div class="container">
+    <div class="topbar">
+      <div class="title">
+        <div class="logo">📚</div>
+        <div>
+          <h1>Library Front</h1>
+          <div class="subtitle">
+            Interface HTML → API FastAPI (tests /health, livres, création utilisateur, emprunt)
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="urlBar">
+      <div class="hint">URL API</div>
+      <input id="apiBase" value="http://127.0.0.1:8000" />
+      <button class="btn btnGhost" onclick="copyText(document.getElementById('apiBase').value)">📋 Copier</button>
+    </div>
+
+    <div class="grid">
+      <!-- Health -->
+      <div class="card">
+        <h2>🩺 Health</h2>
+        <div class="btnRow">
+          <button class="btn btnPrimary" id="btnHealth" onclick="health()">Tester /health</button>
+          <button class="btn btnGhost" onclick="clearOut('outHealth')">🧹 Effacer</button>
+        </div>
+        <div class="out" id="outHealth"></div>
+        <div class="btnRow" style="margin-top:10px;">
+          <button class="btn btnGhost" onclick="copyOut('outHealth')">📋 Copier résultat</button>
+        </div>
+      </div>
+
+      <!-- Books by category -->
+      <div class="card">
+        <h2>🏷️ Livres par catégorie</h2>
+        <p>Liste les livres filtrés par catégorie.</p>
+
+        <label>Catégorie</label>
+        <input id="category" value="Science Fiction" />
+
+        <div class="btnRow">
+          <button class="btn btnPrimary" id="btnListBooks" onclick="listBooks()">Lister</button>
+          <button class="btn btnGhost" onclick="clearOut('outBooks')">🧹 Effacer</button>
+        </div>
+
+        <div class="out" id="outBooks"></div>
+
+        <div class="btnRow" style="margin-top:10px;">
+          <button class="btn btnGhost" onclick="copyOut('outBooks')">📋 Copier résultat</button>
+        </div>
+      </div>
+
+      <!-- Book by ISBN -->
+      <div class="card">
+        <h2>🔎 Livre par ISBN</h2>
+        <p>Récupère un livre précis via son ISBN.</p>
+
+        <label>ISBN</label>
+        <input id="isbn" value="978-0-111111-11-1" />
+
+        <div class="btnRow">
+          <button class="btn btnPrimary" id="btnGetBook" onclick="getBook()">Rechercher</button>
+          <button class="btn btnGhost" onclick="clearOut('outBook')">🧹 Effacer</button>
+        </div>
+
+        <div class="out" id="outBook"></div>
+
+        <div class="btnRow" style="margin-top:10px;">
+          <button class="btn btnGhost" onclick="copyOut('outBook')">📋 Copier résultat</button>
+        </div>
+      </div>
+
+      <!-- Create user -->
+      <div class="card">
+        <h2>👤 Créer utilisateur</h2>
+        <p>Crée un utilisateur et colle automatiquement son <span class="mono">user_id</span> dans la zone d’emprunt.</p>
+
+        <label>Email</label>
+        <input id="uEmail" value="webtest@exemple.com" />
+        <label>Prénom</label>
+        <input id="uFirst" value="Alice" />
+        <label>Nom</label>
+        <input id="uLast" value="Web" />
+        <label>Téléphone</label>
+        <input id="uPhone" value="0600000000" />
+        <label>Adresse</label>
+        <input id="uAddress" value="Paris" />
+
+        <div class="btnRow">
+          <button class="btn btnPrimary" id="btnCreateUser" onclick="createUser()">Créer</button>
+          <button class="btn btnGhost" onclick="clearOut('outUser')">🧹 Effacer</button>
+        </div>
+
+        <div class="out" id="outUser"></div>
+
+        <div class="btnRow" style="margin-top:10px;">
+          <button class="btn btnGhost" onclick="copyOut('outUser')">📋 Copier résultat</button>
+        </div>
+      </div>
+
+      <!-- Borrow -->
+      <div class="card">
+        <h2>📦 Emprunter un livre</h2>
+        <p>Effectue un emprunt via <span class="mono">/borrows</span> (souvent en JSON).</p>
+
+        <label>User ID (UUID)</label>
+        <input id="bUserId" placeholder="Colle ici le user_id créé" />
+        <label>ISBN</label>
+        <input id="bIsbn" value="978-0-111111-11-1" />
+
+        <div class="btnRow">
+          <button class="btn btnPrimary" id="btnBorrow" onclick="borrowBook()">Emprunter</button>
+          <button class="btn btnGhost" onclick="clearOut('outBorrow')">🧹 Effacer</button>
+        </div>
+
+        <div class="out" id="outBorrow"></div>
+
+        <div class="btnRow" style="margin-top:10px;">
+          <button class="btn btnGhost" onclick="copyOut('outBorrow')">📋 Copier résultat</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ---------- Helpers UI ----------
+    function base() {
+      return document.getElementById("apiBase").value.trim().replace(/\/+$/, "");
+    }
+
+    function toast(type, title, message){
+      const wrap = document.getElementById("toasts");
+      const el = document.createElement("div");
+      el.className = "toast " + (type === "ok" ? "ok" : "err");
+      el.innerHTML = `
+        <div>
+          <strong>${escapeHtml(title)}</strong>
+          <small>${escapeHtml(message)}</small>
+        </div>
+        <button class="x" aria-label="Fermer">×</button>
+      `;
+      el.querySelector(".x").onclick = () => el.remove();
+      wrap.appendChild(el);
+      setTimeout(() => { if(el.isConnected) el.remove(); }, 4200);
+    }
+
+    function escapeHtml(str){
+      return String(str).replace(/[&<>"']/g, s => ({
+        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+      }[s]));
+    }
+
+    function pretty(data){
+      return typeof data === "string" ? data : JSON.stringify(data, null, 2);
+    }
+
+    function setLoading(btnId, isLoading){
+      const btn = document.getElementById(btnId);
+      if(!btn) return;
+      btn.disabled = isLoading;
+      if(isLoading){
+        btn.dataset._old = btn.innerHTML;
+        btn.innerHTML = `<span class="loader"></span> Chargement...`;
+      } else if(btn.dataset._old){
+        btn.innerHTML = btn.dataset._old;
+        delete btn.dataset._old;
+      }
+    }
+
+    function clearOut(id){
+      document.getElementById(id).textContent = "";
+    }
+
+    async function copyText(text){
+      try{
+        await navigator.clipboard.writeText(text);
+        toast("ok","Copié","Texte copié dans le presse-papiers.");
+      }catch{
+        toast("err","Impossible","Copie bloquée par le navigateur.");
+      }
+    }
+
+    function copyOut(id){
+      const text = document.getElementById(id).innerText || "";
+      if(!text.trim()){
+        toast("err","Rien à copier","Le bloc est vide.");
+        return;
+      }
+      copyText(text);
+    }
+
+    function renderOut(outId, ok, dataOrErr){
+      const out = document.getElementById(outId);
+      if(ok){
+        out.textContent = `OK\n${pretty(dataOrErr)}`;
+      }else{
+        out.textContent = `ERREUR\n${dataOrErr}`;
+      }
+    }
+
+    // ---------- API ----------
+    async function callApi(method, path, body=null, isForm=false) {
+      const url = base() + path;
+      const opts = { method, headers: {} };
+
+      if (body !== null) {
+        if (isForm) {
+          const fd = new FormData();
+          for (const [k,v] of Object.entries(body)) fd.append(k, v);
+          opts.body = fd;
+        } else {
+          opts.headers["Content-Type"] = "application/json";
+          opts.body = JSON.stringify(body);
+        }
+      }
+
+      const res = await fetch(url, opts);
+      const text = await res.text();
+      let data;
+      try { data = JSON.parse(text); } catch { data = text; }
+
+      if (!res.ok) {
+        const msg = (typeof data === "string") ? data : JSON.stringify(data, null, 2);
+        throw new Error(msg);
+      }
+      return data;
+    }
+
+    async function health() {
+      setLoading("btnHealth", true);
+      try {
+        const data = await callApi("GET", "/health");
+        renderOut("outHealth", true, data);
+      } catch (e) {
+        renderOut("outHealth", false, e.message);
+        toast("err","Health KO", e.message);
+      } finally {
+        setLoading("btnHealth", false);
+      }
+    }
+
+    async function listBooks() {
+      setLoading("btnListBooks", true);
+      try {
+        const cat = encodeURIComponent(document.getElementById("category").value);
+        const data = await callApi("GET", `/books?category=${cat}`);
+        renderOut("outBooks", true, data);
+      } catch (e) {
+        renderOut("outBooks", false, e.message);
+        toast("err","Liste livres KO", e.message);
+      } finally {
+        setLoading("btnListBooks", false);
+      }
+    }
+
+    async function getBook() {
+      setLoading("btnGetBook", true);
+      try {
+        const isbn = encodeURIComponent(document.getElementById("isbn").value);
+        const data = await callApi("GET", `/books/${isbn}`);
+        renderOut("outBook", true, data);
+      } catch (e) {
+        renderOut("outBook", false, e.message);
+        toast("err","Recherche KO", e.message);
+      } finally {
+        setLoading("btnGetBook", false);
+      }
+    }
+
+    async function createUser() {
+      setLoading("btnCreateUser", true);
+
+      const payload = {
+        email: document.getElementById("uEmail").value,
+        first_name: document.getElementById("uFirst").value,
+        last_name: document.getElementById("uLast").value,
+        phone: document.getElementById("uPhone").value,
+        address: document.getElementById("uAddress").value,
+      };
+
+      try {
+        // ⚠️ Mets la bonne option selon ton API:
+        // - Form(...) -> true
+        // - JSON BaseModel -> false
+        const data = await callApi("POST", "/users", payload, true);   // FORM
+        // const data = await callApi("POST", "/users", payload, false); // JSON
+
+        if (data.user_id) {
+          document.getElementById("bUserId").value = data.user_id;
+          toast("ok","Utilisateur créé", "user_id collé dans la zone Emprunter.");
+        } else {
+          toast("ok","Utilisateur créé", "Réponse reçue.");
+        }
+
+        renderOut("outUser", true, data);
+      } catch (e) {
+        renderOut("outUser", false, e.message);
+        toast("err","Création KO", e.message);
+      } finally {
+        setLoading("btnCreateUser", false);
+      }
+    }
+
+    async function borrowBook() {
+      setLoading("btnBorrow", true);
+
+      const payload = {
+        user_id: document.getElementById("bUserId").value,
+        isbn: document.getElementById("bIsbn").value,
+      };
+
+      try {
+        const data = await callApi("POST", "/borrows", payload, false); // JSON
+        renderOut("outBorrow", true, data);
+        toast("ok","Emprunt OK","Le livre a été emprunté (si dispo).");
+      } catch (e) {
+        renderOut("outBorrow", false, e.message);
+        toast("err","Emprunt KO", e.message);
+      } finally {
+        setLoading("btnBorrow", false);
+      }
+    }
+  </script>
+</body>
+</html>
